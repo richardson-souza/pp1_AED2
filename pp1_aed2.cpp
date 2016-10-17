@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
+#include <climits>
 
 using namespace std;
 
@@ -8,6 +9,7 @@ typedef int Vertex;
 const int BRANCO = 0;
 const int CINZA = 1;
 const int PRETO = 2;
+const int INFINITO = INT_MAX;
 int tempo;
 
 class Item {
@@ -155,6 +157,7 @@ void Grafo::print() {
   n = m = 0;
 }*/
 
+//busca em profundidade
 void dfsVisita(Grafo &g, Item &u){
 	tempo = tempo+1;
 	u.setD(tempo);
@@ -240,6 +243,36 @@ bool Fila::vazia(){
 	}
 	else{
 		return false;
+	}
+}
+
+//busca em largura
+void bfs(Grafo &g, Item &s){
+	for(int i = 1; i <= g.getN(); i++){
+		g.getAdj()[i].setCor(BRANCO);
+		g.getAdj()[i].setD(INFINITO);
+		g.getAdj()[i].setPredecessor(0);
+	}
+	s.setCor(CINZA);
+	s.setD(0);
+	s.setPredecessor(0);
+
+	Fila fila(g.getN());
+	fila.enfileira(s);
+	Item u;
+	Vertex posicao;
+	while(!fila.vazia()){
+		u = fila.desenfileira();
+		for(int i = 0; i < u.getVertices().size(); i++){
+			posicao = u.getVertices()[i];
+			if(g.getAdj()[posicao].getCor() == BRANCO){
+				g.getAdj()[posicao].setCor(CINZA);
+				g.getAdj()[posicao].setD(u.getD()+1);
+				g.getAdj()[posicao].setPredecessor(u.getVertex());
+				fila.enfileira(g.getAdj()[posicao]);
+			}
+		}
+		u.setCor(PRETO);
 	}
 }
 
