@@ -187,6 +187,61 @@ void dfs(Grafo &g){
 	}
 }
 
+class Fila{
+private:
+	Item *vertices; //vetor
+	int frente, tras;
+	int TAM;
+public:
+	Fila(int tam);
+	void enfileira(Item);
+	Item desenfileira();
+	void mostra();
+	bool vazia();
+};
+Fila::Fila(int tam){
+	TAM = tam;
+	vertices = new Item[TAM];
+	frente = 0;
+	tras = frente;
+}
+void Fila::enfileira (Item it){
+	if((tras + 1) % TAM == frente){
+		cout << "Fila Cheia!!" << endl;
+	}
+	else
+	{
+		vertices[tras] = it;
+		tras = (tras+1) % TAM;
+	}
+}
+Item Fila::desenfileira(){
+	if(frente == tras){
+		cout << "Fila vazia!!" << endl;
+		return NULL;
+	}
+	else
+	{
+		Item it;
+		it = vertices[frente];
+		frente = (frente + 1) % TAM;
+		return it;
+	}
+}
+void Fila::mostra(){
+	for(int i = frente; i < tras; i++){
+		vertices[i].print();
+	}
+	cout << endl;
+}
+bool Fila::vazia(){
+	if(frente == tras){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
 
 // Função auxiliar
 void testaGrafo(Grafo &g) {
@@ -206,8 +261,16 @@ int main(int argc, const char * argv[]) {
   Grafo g(5);
   //cout << "-----grafo-----" << endl;
   testaGrafo(g);
-
   dfs(g);
+
+  /*Fila f(5);
+  f.enfileira(g.getAdj()[1]);
+  f.enfileira(g.getAdj()[5]);
+  f.mostra();
+  Item it;
+  it = f.desenfileira();
+  it.print();
+  f.mostra();*/
   //cout << g.getAdj()[1].getPredecessor() << endl;
   cout << endl << "fim";
   /*g.getAdj()[1].setCor(CINZA);
