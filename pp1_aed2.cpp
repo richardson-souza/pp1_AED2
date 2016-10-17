@@ -174,6 +174,7 @@ void dfsVisita(Grafo &g, Item &u){
 	u.setCor(PRETO);
 	tempo = tempo+1;
 	u.setF(tempo);
+	cout << u.getVertex() << " ";
 }
 
 void dfs(Grafo &g){
@@ -221,7 +222,7 @@ void Fila::enfileira (Item it){
 Item Fila::desenfileira(){
 	if(frente == tras){
 		cout << "Fila vazia!!" << endl;
-		return NULL;
+		//return NULL;
 	}
 	else
 	{
@@ -267,12 +268,14 @@ void bfs(Grafo &g, Item &s){
 			posicao = u.getVertices()[i];
 			if(g.getAdj()[posicao].getCor() == BRANCO){
 				g.getAdj()[posicao].setCor(CINZA);
+				//cout << g.getAdj()[posicao].getVertex() << " ";
 				g.getAdj()[posicao].setD(u.getD()+1);
 				g.getAdj()[posicao].setPredecessor(u.getVertex());
 				fila.enfileira(g.getAdj()[posicao]);
 			}
 		}
 		u.setCor(PRETO);
+		cout << u.getVertex() << " ";
 	}
 }
 
@@ -294,8 +297,8 @@ int main(int argc, const char * argv[]) {
   Grafo g(5);
   //cout << "-----grafo-----" << endl;
   testaGrafo(g);
-  dfs(g);
-
+  //dfs(g);
+  bfs(g, g.getAdj()[1]);
   /*Fila f(5);
   f.enfileira(g.getAdj()[1]);
   f.enfileira(g.getAdj()[5]);
@@ -305,7 +308,7 @@ int main(int argc, const char * argv[]) {
   it.print();
   f.mostra();*/
   //cout << g.getAdj()[1].getPredecessor() << endl;
-  cout << endl << "fim";
+  cout << endl << "fim" << endl;
   /*g.getAdj()[1].setCor(CINZA);
   g.getAdj()[3].setCor(BRANCO);
   g.getAdj()[5].setCor(PRETO);
