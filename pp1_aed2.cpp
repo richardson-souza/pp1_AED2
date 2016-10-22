@@ -174,7 +174,6 @@ void dfsVisita(Grafo &g, Item &u){
 	u.setCor(PRETO);
 	tempo = tempo+1;
 	u.setF(tempo);
-	cout << u.getVertex() << " ";
 }
 
 void dfs(Grafo &g){
@@ -222,7 +221,7 @@ void Fila::enfileira (Item it){
 Item Fila::desenfileira(){
 	if(frente == tras){
 		cout << "Fila vazia!!" << endl;
-		//return NULL;
+		return NULL;
 	}
 	else
 	{
@@ -247,8 +246,118 @@ bool Fila::vazia(){
 	}
 }
 
+class No {
+public:
+	Item item;
+    No *prox;
+
+    No() {}
+
+    Item getItem() {
+        return item;
+    }
+
+    void setItem(Item item) {
+        this -> item = item;
+    }
+
+    No* getProx() {
+        return prox;
+    }
+
+    void setProx(No *prox) {
+        this->prox = prox;
+    }
+};
+
+class Pilha {
+private:
+    No *fundo, *topo;
+    int estado;
+
+public:
+    Pilha();
+
+    No* getFundo(){
+    	return fundo;
+    }
+
+    void setFundo(No *fundo) {
+    	this->fundo = fundo;
+    }
+
+    No* getTopo(){
+        return topo;
+    }
+
+    void setTopo(No *topo){
+    	this->topo = topo;
+    }
+
+    int getEstado(){
+    	return estado;
+    }
+
+    void setEstado(int estado){
+    	this->estado = estado;
+    }
+
+    Item desempilha();
+    void empilha(Item);
+    bool vazia();
+    void mostra();
+};
+
+Pilha::Pilha() {
+    fundo = new No();
+    topo = fundo;
+    estado = 0;
+}
+
+bool Pilha::vazia() {
+	return topo == fundo;
+}
+
+void Pilha::empilha(Item item) {
+    No *aux = new No();
+    topo -> setItem(item);
+    aux -> setProx(topo);
+    topo = aux;
+}
+
+Item Pilha::desempilha() {
+	No *aux = topo;
+	topo = topo->getProx();
+	Item item = topo->getItem();
+	//item = topo->getItem();
+	delete aux;
+	return item;
+}
+
+void Pilha::mostra(){
+	No *aux = new No();
+	aux = topo->getProx();
+	while(aux != NULL){
+		cout << aux->getItem().getVertex() << " ";
+		aux = aux->getProx();
+	}
+	cout << endl;
+}
+
+void descobreCaminho(Pilha &visita, Pilha &caminho){
+	caminho.empilha(visita.desempilha());
+	while(!visita.vazia()){
+		if(caminho.getTopo()->getProx()->getItem().getPredecessor() == visita.getTopo()->getProx()->getItem().getVertex()){
+			caminho.empilha(visita.desempilha());
+		}
+		else{
+			visita.desempilha();
+		}
+	}
+}
+
 //busca em largura
-void bfs(Grafo &g, Item &s){
+void bfs(Grafo &g, Item &s, Item &final, Pilha &visita, Pilha &caminho){
 	for(int i = 1; i <= g.getN(); i++){
 		g.getAdj()[i].setCor(BRANCO);
 		g.getAdj()[i].setD(INFINITO);
@@ -260,23 +369,27 @@ void bfs(Grafo &g, Item &s){
 
 	Fila fila(g.getN());
 	fila.enfileira(s);
-	Item u;
-	Vertex posicao;
-	while(!fila.vazia()){
+	Item u; Vertex posicao; bool continuar = 1;
+	while(continuar){
 		u = fila.desenfileira();
-		for(int i = 0; i < u.getVertices().size(); i++){
-			posicao = u.getVertices()[i];
-			if(g.getAdj()[posicao].getCor() == BRANCO){
-				g.getAdj()[posicao].setCor(CINZA);
-				//cout << g.getAdj()[posicao].getVertex() << " ";
-				g.getAdj()[posicao].setD(u.getD()+1);
-				g.getAdj()[posicao].setPredecessor(u.getVertex());
-				fila.enfileira(g.getAdj()[posicao]);
+		if(u.getVertex() == final.getVertex()){
+			continuar = 0;
+		}
+		else{
+			for(int i = 0; i < u.getVertices().size(); i++){
+				posicao = u.getVertices()[i];
+				if(g.getAdj()[posicao].getCor() == BRANCO){
+					g.getAdj()[posicao].setCor(CINZA);
+					g.getAdj()[posicao].setD(u.getD()+1);
+					g.getAdj()[posicao].setPredecessor(u.getVertex());
+					fila.enfileira(g.getAdj()[posicao]);
+				}
 			}
 		}
 		u.setCor(PRETO);
-		cout << u.getVertex() << " ";
+		visita.empilha(u);
 	}
+	descobreCaminho(visita, caminho);
 }
 
 // Função auxiliar
@@ -292,37 +405,15 @@ void testaGrafo(Grafo &g) {
 }
 
 int main(int argc, const char * argv[]) {
-  //int n;
-  //cout << "ordem: "; cin >> n;
-  Grafo g(5);
-  //cout << "-----grafo-----" << endl;
-  testaGrafo(g);
-  //dfs(g);
-  bfs(g, g.getAdj()[1]);
-  /*Fila f(5);
-  f.enfileira(g.getAdj()[1]);
-  f.enfileira(g.getAdj()[5]);
-  f.mostra();
-  Item it;
-  it = f.desenfileira();
-  it.print();
-  f.mostra();*/
-  //cout << g.getAdj()[1].getPredecessor() << endl;
-  cout << endl << "fim" << endl;
-  /*g.getAdj()[1].setCor(CINZA);
-  g.getAdj()[3].setCor(BRANCO);
-  g.getAdj()[5].setCor(PRETO);
-  cout << g.getAdj()[1].getCor() << endl;
-  cout << g.getAdj()[2].getCor() << endl;
-  cout << g.getAdj()[3].getCor() << endl;
-  cout << g.getAdj()[4].getCor() << endl;
-  cout << g.getAdj()[5].getCor() << endl;*/
-  //testaGrafo(g);
-  //cout << "-----fim-------" << endl;
+  Grafo g(5); Pilha visita; Pilha caminho;
 
-  //g.getAdj()[1].print();
-  //dfs(g);
-  //cout << g.getAdj()->getPrim()->getProx()->getItem()->getCor();
-  //cout << "-----fim-------";
+  cout << "-----grafo-----" << endl;
+  testaGrafo(g);
+
+  bfs(g, g.getAdj()[1], g.getAdj()[4], visita, caminho);
+  caminho.mostra();
+
+  cout << endl << "fim";
+
   return 0;
 }
