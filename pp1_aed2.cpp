@@ -359,9 +359,11 @@ void descobreCaminho(Pilha &visita, Pilha &caminho){
 //busca em largura
 void bfs(Grafo &g, Item &s, Item &final, Pilha &visita, Pilha &caminho){
 	for(int i = 1; i <= g.getN(); i++){
-		g.getAdj()[i].setCor(BRANCO);
-		g.getAdj()[i].setD(INFINITO);
-		g.getAdj()[i].setPredecessor(0);
+		if(g.getAdj()[i].getCor() != PRETO){
+			g.getAdj()[i].setCor(BRANCO);
+			g.getAdj()[i].setD(INFINITO);
+			g.getAdj()[i].setPredecessor(0);
+		}
 	}
 	s.setCor(CINZA);
 	s.setD(0);
@@ -410,6 +412,7 @@ int main(int argc, const char * argv[]) {
   cout << "-----grafo-----" << endl;
   testaGrafo(g);
 
+  g.getAdj()[2].setCor(PRETO);
   bfs(g, g.getAdj()[1], g.getAdj()[4], visita, caminho);
   caminho.mostra();
 
