@@ -407,16 +407,37 @@ void testaGrafo(Grafo &g) {
 }
 
 int main(int argc, const char * argv[]) {
-  Grafo g(5); Pilha visita; Pilha caminho;
+  /*Grafo g(5); Pilha visita; Pilha caminho;
 
   cout << "-----grafo-----" << endl;
   testaGrafo(g);
 
   g.getAdj()[2].setCor(PRETO);
   bfs(g, g.getAdj()[1], g.getAdj()[4], visita, caminho);
-  caminho.mostra();
+  caminho.mostra();*/
+	int ordem, tamanho, qtd_inimigos, inimigo; Vertex vertice_1, vertice_2, sistema_inicial, sistema_final;
+	Pilha visita; Pilha caminho;
 
-  cout << endl << "fim";
+	cout << "ordem : "; cin >> ordem;
+	cout << "tamanho : "; cin >> tamanho;
+	Grafo grafo(ordem);
+	for(int i = 1; i <= tamanho; i++){
+		cin >> vertice_1; cin >> vertice_2;
+		grafo.insertEdge(vertice_1, vertice_2);
+	}
+
+	cout << "Qtd Inimigos: "; cin >> qtd_inimigos;
+	for(int i = 1; i <= qtd_inimigos; i++){
+		cin >> inimigo;
+		grafo.getAdj()[inimigo].setCor(PRETO);
+	}
+
+	cout << "Sistema inicial: "; cin >> sistema_inicial;
+	cout << "Sistema final: "; cin >> sistema_final;
+	bfs(grafo, grafo.getAdj()[sistema_inicial], grafo.getAdj()[sistema_final], visita, caminho);
+
+	caminho.mostra();
+	cout << endl << "fim";
 
   return 0;
 }
