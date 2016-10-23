@@ -407,14 +407,6 @@ void testaGrafo(Grafo &g) {
 }
 
 int main(int argc, const char * argv[]) {
-  /*Grafo g(5); Pilha visita; Pilha caminho;
-
-  cout << "-----grafo-----" << endl;
-  testaGrafo(g);
-
-  g.getAdj()[2].setCor(PRETO);
-  bfs(g, g.getAdj()[1], g.getAdj()[4], visita, caminho);
-  caminho.mostra();*/
 	int ordem, tamanho, qtd_inimigos, inimigo; Vertex vertice_1, vertice_2, sistema_inicial, sistema_final;
 	Pilha visita; Pilha caminho;
 
