@@ -1,7 +1,7 @@
 
 class No {
 public:
-	Contain *item;
+    Contain *item;
     No *prox;
 
     No() {}
